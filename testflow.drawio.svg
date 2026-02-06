@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1350" height="850" viewBox="0 0 1450 900">
+  <defs>
+    <style>
+      .title { font: bold 34px sans-serif; fill: #0557f0; }
+      .subtitle { font: 18px sans-serif; fill: #0f3267; }
+      .component-title { font: bold 15px sans-serif; fill: #1a202c; }
+      .component-desc { font: 12px sans-serif; fill: #4a5568; }
+      .arrow-label { font: bold 11px sans-serif; fill: #4a5568; }
+      .label-bg { fill: #ffffff; opacity: 0.9; }
+      .benefit-text { font: 11px sans-serif; fill: #2d3748; }
+      
+      .ui-box { fill: #667eea; stroke: #5a67d8; stroke-width: 2; }
+      .core-box { fill: #4299e1; stroke: #3182ce; stroke-width: 2; }
+      .component-box { fill: #ffffff; stroke: #cbd5e0; stroke-width: 2; }
+      .ai-component { fill: #faf5ff; stroke: #9f7aea; stroke-width: 2; }
+      .db-component { fill: #f0fff4; stroke: #48bb78; stroke-width: 2; }
+      .mcp-component { fill: #fffaf0; stroke: #ed8936; stroke-width: 2; }
+      .tool-component { fill: #ebf8ff; stroke: #4299e1; stroke-width: 2; }
+      .storage-component { fill: #f7fafc; stroke: #718096; stroke-width: 2; }
+      
+      .arrow { stroke: #4a5568; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-ai { stroke: #9f7aea; stroke-width: 2; fill: none; marker-end: url(#arrowhead-ai); }
+      .arrow-ai-both { stroke: #9f7aea; stroke-width: 2; fill: none; marker-start: url(#arrowhead-ai-start); marker-end: url(#arrowhead-ai); }
+      .arrow-data { stroke: #48bb78; stroke-width: 2; fill: none; marker-end: url(#arrowhead-data); }
+      .arrow-data-both { stroke: #48bb78; stroke-width: 2; fill: none; marker-start: url(#arrowhead-data-start); marker-end: url(#arrowhead-data); }
+      .arrow-action { stroke: #ed8936; stroke-width: 2; fill: none; marker-end: url(#arrowhead-action); }
+      
+      .white-text { fill: #ffffff; font: bold 16px sans-serif; }
+    </style>
+    
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5568" />
+    </marker>
+    <marker id="arrowhead-ai" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#9f7aea" />
+    </marker>
+    <marker id="arrowhead-data" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#48bb78" />
+    </marker>
+    <marker id="arrowhead-action" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ed8936" />
+    </marker>
+    
+    <marker id="arrowhead-ai-start" markerWidth="8" markerHeight="8" refX="1" refY="3" orient="auto">
+      <polygon points="8 0, 0 3, 8 6" fill="#9f7aea" />
+    </marker>
+    <marker id="arrowhead-data-start" markerWidth="8" markerHeight="8" refX="1" refY="3" orient="auto">
+      <polygon points="8 0, 0 3, 8 6" fill="#48bb78" />
+    </marker>
+    
+    <linearGradient id="coreGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4299e1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3182ce;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Title -->
+  <text x="700" y="40" class="title" text-anchor="middle">Testflow Architecture</text>
+  <text x="700" y="60" class="subtitle" text-anchor="middle">AI-Powered Test Automation</text>
+  
+  <!-- User Input -->
+  <g id="user">
+    <circle cx="300" cy="150" r="40" fill="#e6fffa" stroke="#319795" stroke-width="2"/>
+    <text x="300" y="155" text-anchor="middle" font-size="30">👤</text>
+    <text x="300" y="205" class="component-desc" text-anchor="middle">User</text>
+  </g>
+  
+  <!-- Web UI -->
+  <g id="web-ui">
+    <rect x="520" y="110" width="160" height="80" rx="8" class="ui-box"/>
+    <text x="600" y="145" class="white-text" text-anchor="middle">Web UI</text>
+    <text x="600" y="165" class="component-desc" text-anchor="middle" fill="#e6f2ff">FastAPI</text>
+  </g>
+  
+  <!-- TESTFLOW Core -->
+  <g id="testflow">
+    <rect x="200" y="250" width="800" height="160" rx="10" fill="url(#coreGradient)" stroke="#3182ce" stroke-width="3"/>
+    <text x="600" y="285" class="white-text" text-anchor="middle" font-size="20">TESTFLOW</text>
+    
+    <rect x="240" y="310" width="200" height="70" rx="5" class="component-box"/>
+    <text x="340" y="340" class="component-title" text-anchor="middle">Orchestration</text>
+    <text x="340" y="360" class="component-desc" text-anchor="middle">Agent • Registry</text>
+    
+    <rect x="500" y="310" width="200" height="70" rx="5" class="component-box"/>
+    <text x="600" y="340" class="component-title" text-anchor="middle">Services</text>
+    <text x="600" y="360" class="component-desc" text-anchor="middle">Validation • Screenshot</text>
+    
+    <rect x="760" y="310" width="200" height="70" rx="5" class="component-box"/>
+    <text x="860" y="340" class="component-title" text-anchor="middle">Integration</text>
+    <text x="860" y="360" class="component-desc" text-anchor="middle">TestRail • GitLab</text>
+  </g>
+  
+  <!-- AI Component -->
+  <g id="ai">
+    <rect x="200" y="500" width="180" height="100" rx="8" class="ai-component"/>
+    <text x="290" y="540" class="component-title" text-anchor="middle">🤖 OpenAI</text>
+    <text x="290" y="560" class="component-desc" text-anchor="middle">GPT-4o-mini</text>
+    <text x="290" y="580" class="component-desc" text-anchor="middle">NL Interpretation</text>
+  </g>
+  
+  <!-- Vector DB -->
+  <g id="vectordb">
+    <rect x="420" y="500" width="180" height="100" rx="8" class="db-component"/>
+    <text x="510" y="540" class="component-title" text-anchor="middle">💾 Vector DB</text>
+    <text x="510" y="560" class="component-desc" text-anchor="middle">ChromaDB</text>
+    <text x="510" y="580" class="component-desc" text-anchor="middle">RAG Memory</text>
+  </g>
+  
+  <!-- MCP -->
+  <g id="mcp">
+    <rect x="640" y="500" width="180" height="100" rx="8" class="mcp-component"/>
+    <text x="730" y="540" class="component-title" text-anchor="middle">⚙️ MCP</text>
+    <text x="730" y="560" class="component-desc" text-anchor="middle">Protocol</text>
+    <text x="730" y="580" class="component-desc" text-anchor="middle">Action Router</text>
+  </g>
+  
+  <!-- Tools Group -->
+  <g id="tools-group">
+    <rect x="900" y="480" width="400" height="230" rx="10" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="1110" y="505" class="component-title" text-anchor="middle" fill="#1e40af">🛠️ Tools</text>
+    
+    <!-- Playwright -->
+    <rect x="920" y="520" width="170" height="80" rx="8" class="tool-component"/>
+    <text x="995" y="550" class="component-title" text-anchor="middle">🎭 Playwright</text>
+    <text x="995" y="568" class="component-desc" text-anchor="middle">Browser</text>
+    <text x="995" y="586" class="component-desc" text-anchor="middle">Automation</text>
+    
+    <!-- API Testing -->
+    <rect x="1035" y="620" width="170" height="80" rx="8" class="tool-component"/>
+    <text x="1120" y="650" class="component-title" text-anchor="middle">🔌 API Tool</text>
+    <text x="1120" y="668" class="component-desc" text-anchor="middle">REST/JSONRPC</text>
+    <text x="1120" y="686" class="component-desc" text-anchor="middle">Integration</text>
+    
+    <!-- Testzilla Framework -->
+    <rect x="1115" y="520" width="170" height="80" rx="8" class="tool-component"/>
+    <text x="1190" y="545" class="component-title" text-anchor="middle">🦖 Testzilla</text>
+    <text x="1190" y="563" class="component-desc" text-anchor="middle">PLC</text>
+    <text x="1190" y="581" class="component-desc" text-anchor="middle">Adaptio Services</text>
+  </g>
+  
+  <!-- Storage -->
+  <g id="storage">
+    <rect x="1140" y="280" width="180" height="110" rx="8" class="storage-component"/>
+    <text x="1220" y="305" class="component-title" text-anchor="middle">📦 Storage</text>
+    <text x="1220" y="325" class="component-desc" text-anchor="middle">SQLite DB</text>
+    <text x="1220" y="345" class="component-desc" text-anchor="middle">Screenshots</text>
+    <text x="1220" y="365" class="component-desc" text-anchor="middle">Reports</text>
+    <text x="1220" y="385" class="component-desc" text-anchor="middle">History</text>
+  </g>
+  
+  <!-- Arrows with clear labels -->
+  <!-- User to Web UI -->
+  <path d="M 340 150 L 520 150" class="arrow"/>
+  <rect x="410" y="140" width="60" height="18" rx="3" class="label-bg"/>
+  <text x="440" y="152" class="arrow-label" text-anchor="middle">Request</text>
+  
+  <!-- Web UI to TESTFLOW -->
+  <path d="M 600 190 L 600 250" class="arrow"/>
+  <rect x="578" y="210" width="45" height="18" rx="3" class="label-bg"/>
+  <text x="600" y="223" class="arrow-label" text-anchor="middle">Route</text>
+  
+  <!-- TESTFLOW ↔ AI (bidirectional) -->
+  <path d="M 290 410 L 290 500" class="arrow-ai-both"/>
+  <rect x="273" y="445" width="35" height="18" rx="3" class="label-bg"/>
+  <text x="290" y="458" class="arrow-label" text-anchor="middle">Think</text>
+  
+  <!-- TESTFLOW ↔ Vector DB (bidirectional) -->
+  <path d="M 510 410 L 510 500" class="arrow-data-both"/>
+  <rect x="470" y="445" width="80" height="18" rx="3" class="label-bg"/>
+  <text x="510" y="458" class="arrow-label" text-anchor="middle">Query/Cache</text>
+  
+  <!-- TESTFLOW to MCP -->
+  <path d="M 730 410 L 730 500" class="arrow-action"/>
+  <rect x="710" y="445" width="40" height="18" rx="3" class="label-bg"/>
+  <text x="730" y="458" class="arrow-label" text-anchor="middle">Action</text>
+  
+  <!-- MCP to Tools -->
+  <path d="M 820 550 L 900 550" class="arrow-action"/>
+  <rect x="830" y="540" width="50" height="18" rx="3" class="label-bg"/>
+  <text x="855" y="553" class="arrow-label" text-anchor="middle">Execute</text>
+  
+  <!-- Tools to Storage -->
+  <path d="M 1090 480 Q 1160 465 1230 390" class="arrow"/>
+  <rect x="1155" y="430" width="35" height="18" rx="3" class="label-bg"/>
+  <text x="1172" y="443" class="arrow-label" text-anchor="middle">Save</text>
+  
+  <!-- Storage back to TESTFLOW -->
+  <path d="M 1140 335 L 1000 335" class="arrow"/>
+  <rect x="1050" y="325" width="40" height="18" rx="3" class="label-bg"/>
+  <text x="1068" y="338" class="arrow-label" text-anchor="middle">Status</text>
+  
+  <!-- Storage to Web UI (reports) -->
+  <path d="M 1230 280 Q 930 200 680 155" class="arrow"/>
+  <rect x="895" y="195" width="50" height="18" rx="3" class="label-bg"/>
+  <text x="920" y="208" class="arrow-label" text-anchor="middle">Reports</text>
+  
+  <!-- Benefits -->
+  <g id="benefits">
+    <rect x="180" y="720" width="1190" height="50" rx="6" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1.5"/>
+    <text x="260" y="750" class="benefit-text">🤖 Zero Scripts</text>
+    <text x="460" y="750" class="benefit-text">📊 Smart Cache 70-80%</text>
+    <text x="690" y="750" class="benefit-text">⚡ Real-time WebSocket</text>
+    <text x="930" y="750" class="benefit-text">🔌 Extensible MCP</text>
+    <text x="1130" y="750" class="benefit-text">💾 Complete History</text>
+  </g>
+  
+</svg>

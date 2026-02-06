@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testflow Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+        .glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .flow-arrow { animation: flow 2s linear infinite; }
+        @keyframes flow {
+            0% { transform: translateX(-10px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(10px); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 0.6);
+            border-radius: 50%;
+            animation: float 3s infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="gradient-bg p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">🚀 Testflow Framework</h1>
+            <div class="flex gap-4">
+                <button onclick="showTab('chat')" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition">💬 Chat</button>
+                <button onclick="showTab('progress')" class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700 transition">📊 Progress</button>
+                <button onclick="showTab('metrics')" class="px-4 py-2 bg-green-600 rounded hover:bg-green-700 transition">📈 Metrics</button>
+                <button onclick="showTab('reports')" class="px-4 py-2 bg-yellow-600 rounded hover:bg-yellow-700 transition">📁 Reports</button>
+            </div>
+            <div id="connection-status" class="flex items-center gap-2">
+                <div id="status-indicator" class="w-3 h-3 rounded-full bg-gray-500"></div>
+                <span id="status-text" class="text-sm">Connecting...</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Chat Tab -->
+        <div id="chat-tab" class="tab-content">
+            <div class="grid grid-cols-1 gap-6">
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                    <h2 class="text-xl font-bold mb-4">AI Chat Interface</h2>
+                    <div id="chat-messages" class="h-96 overflow-y-auto bg-gray-900 rounded p-4 mb-4 space-y-2"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type your message or 'run test case 596349'..." 
+                               class="flex-1 px-4 py-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               onkeypress="if(event.key==='Enter') sendMessage()">
+                        <button onclick="sendMessage()" class="px-6 py-2 bg-blue-600 rounded hover:bg-blue-700 transition">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tab -->
+        <div id="progress-tab" class="tab-content hidden">
+            <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                <h2 class="text-xl font-bold mb-6">Test Execution Flow</h2>
+                
+                <!-- Flow Diagram -->
+                <div class="flex items-center justify-around mb-8 relative">
+                    <div class="text-center">
+                        <div id="stage-input" class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl mb-2 transition-all duration-500">
+                            👤
+                        </div>
+                        <p class="text-sm">User Input</p>
+                        <p id="stage-input-time" class="text-xs text-gray-500 mt-1"></p>
+                    </div>
+                    <div class="flow-arrow text-4xl text-blue-400">→</div>
+                    <div class="text-center">
+                        <div id="stage-ai" class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl mb-2 transition-all duration-500">
+                            🤖
+                        </div>
+                        <p class="text-sm">AI Processing</p>
+                        <p id="stage-ai-time" class="text-xs text-gray-500 mt-1"></p>
+                    </div>
+                    <div class="flow-arrow text-4xl text-purple-400">→</div>
+                    <div class="text-center">
+                        <div id="stage-execution" class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl mb-2 transition-all duration-500">
+                            ⚡
+                        </div>
+                        <p class="text-sm">Test Execution</p>
+                        <p id="stage-execution-time" class="text-xs text-gray-500 mt-1"></p>
+                    </div>
+                    <div class="flow-arrow text-4xl text-green-400">→</div>
+                    <div class="text-center">
+                        <div id="stage-complete" class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl mb-2 transition-all duration-500">
+                            ✅
+                        </div>
+                        <p class="text-sm">Complete</p>
+                        <p id="stage-complete-time" class="text-xs text-gray-500 mt-1"></p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between mb-2">
+                        <span id="progress-message" class="text-sm">Ready to execute tests</span>
+                        <span id="progress-percent" class="text-sm font-bold">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-blue-600 to-purple-600 h-4 rounded-full transition-all duration-500 flex items-center justify-end" style="width: 0%">
+                            <div class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Test Info -->
+                <div id="current-test-info" class="bg-gray-900 rounded p-4 mt-4 hidden">
+                    <h3 class="font-bold mb-2 text-blue-400">📋 Current Test Execution</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-400">Test Case ID</p>
+                            <p id="test-case-id" class="font-mono">N/A</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Current Stage</p>
+                            <p id="test-stage" class="font-mono">N/A</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Started At</p>
+                            <p id="test-start-time" class="font-mono text-sm">N/A</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Duration</p>
+                            <p id="test-duration" class="font-mono text-sm">0s</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Steps -->
+                <div id="recent-steps" class="bg-gray-900 rounded p-4 mt-4 hidden">
+                    <h3 class="font-bold mb-2 text-purple-400">📝 Recent Steps</h3>
+                    <div id="steps-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Tab -->
+        <div id="metrics-tab" class="tab-content hidden">
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl hover:shadow-2xl transition">
+                    <p class="text-gray-400 text-sm">Total Tests</p>
+                    <p id="metric-total" class="text-3xl font-bold text-blue-400">0</p>
+                    <p class="text-xs text-gray-500 mt-1">All time</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl hover:shadow-2xl transition">
+                    <p class="text-gray-400 text-sm">Success Rate</p>
+                    <p id="metric-success" class="text-3xl font-bold text-green-400">0%</p>
+                    <p class="text-xs text-gray-500 mt-1">Pass percentage</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl hover:shadow-2xl transition">
+                    <p class="text-gray-400 text-sm">Avg Duration</p>
+                    <p id="metric-duration" class="text-3xl font-bold text-purple-400">0s</p>
+                    <p class="text-xs text-gray-500 mt-1">Per test</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl hover:shadow-2xl transition">
+                    <p class="text-gray-400 text-sm">Today</p>
+                    <p id="metric-today" class="text-3xl font-bold text-yellow-400">0</p>
+                    <p class="text-xs text-gray-500 mt-1">Tests executed</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                    <p class="text-gray-400 text-sm">AI Calls</p>
+                    <p id="metric-ai-calls" class="text-2xl font-bold text-indigo-400">0</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                    <p class="text-gray-400 text-sm">Cache Hits</p>
+                    <p id="metric-cache-hits" class="text-2xl font-bold text-cyan-400">0</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">📊 Daily Trend (Last 7 Days)</h3>
+                    <button onclick="loadMetrics()" class="px-3 py-1 bg-blue-600 rounded text-sm hover:bg-blue-700">🔄 Refresh</button>
+                </div>
+                <canvas id="metrics-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports-tab" class="tab-content hidden">
+            <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">📁 Test Reports</h2>
+                    <button onclick="loadReports()" class="px-3 py-1 bg-blue-600 rounded text-sm hover:bg-blue-700">🔄 Refresh</button>
+                </div>
+                <div id="reports-list" class="space-y-2">
+                    <p class="text-gray-400">Loading reports...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let chart = null;
+        let testStartTime = null;
+        let durationInterval = null;
+
+        // WebSocket connection with auto-reconnect
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/chat`;
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log('✅ WebSocket connected');
+                updateConnectionStatus(true);
+                addChatMessage('System', '🟢 Connected to Testflow Framework');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleWebSocketMessage(data);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('❌ WebSocket error:', error);
+                updateConnectionStatus(false);
+            };
+            
+            ws.onclose = () => {
+                console.log('🔴 WebSocket disconnected. Reconnecting...');
+                updateConnectionStatus(false);
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+
+        // Update connection status indicator
+        function updateConnectionStatus(connected) {
+            const indicator = document.getElementById('status-indicator');
+            const text = document.getElementById('status-text');
+            
+            if (connected) {
+                indicator.className = 'w-3 h-3 rounded-full bg-green-500 animate-pulse';
+                text.textContent = 'Connected';
+            } else {
+                indicator.className = 'w-3 h-3 rounded-full bg-red-500';
+                text.textContent = 'Disconnected';
+            }
+        }
+
+        // Handle WebSocket messages
+        function handleWebSocketMessage(data) {
+            console.log('📨 Received:', data);
+            
+            if (data.type === 'progress') {
+                updateProgress(data);
+            } else if (data.type === 'response') {
+                addChatMessage('AI', data.message);
+            } else if (data.type === 'step') {
+                addTestStep(data.step, data.status);
+            } else if (data.type === 'error') {
+                addChatMessage('System', '❌ Error: ' + data.message);
+            }
+        }
+
+        // Update progress display
+        function updateProgress(data) {
+            const progress = data.progress;
+            const stage = data.stage;
+            
+            // Update progress bar
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-percent').textContent = progress + '%';
+            document.getElementById('progress-message').textContent = data.message;
+
+            // Reset all stages
+            ['stage-input', 'stage-ai', 'stage-execution', 'stage-complete'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove('glow', 'bg-blue-600', 'bg-purple-600', 'bg-green-600');
+                el.classList.add('bg-gray-700');
+            });
+
+            // Highlight current stage with animation
+            if (stage === 'fetching') {
+                const el = document.getElementById('stage-input');
+                el.classList.add('glow', 'bg-blue-600');
+                el.classList.remove('bg-gray-700');
+                updateStageTime('stage-input-time', 'Active');
+            } else if (stage === 'ai_processing') {
+                const el = document.getElementById('stage-ai');
+                el.classList.add('glow', 'bg-purple-600');
+                el.classList.remove('bg-gray-700');
+                updateStageTime('stage-ai-time', 'Processing');
+            } else if (stage === 'executing') {
+                const el = document.getElementById('stage-execution');
+                el.classList.add('glow', 'bg-blue-600');
+                el.classList.remove('bg-gray-700');
+                updateStageTime('stage-execution-time', 'Running');
+            } else if (stage === 'complete') {
+                const el = document.getElementById('stage-complete');
+                el.classList.add('glow', 'bg-green-600');
+                el.classList.remove('bg-gray-700');
+                updateStageTime('stage-complete-time', 'Done');
+                if (durationInterval) clearInterval(durationInterval);
+            }
+
+            // Show test info
+            const infoDiv = document.getElementById('current-test-info');
+            infoDiv.classList.remove('hidden');
+            document.getElementById('test-case-id').textContent = data.test_id;
+            document.getElementById('test-stage').textContent = stage.replace('_', ' ').toUpperCase();
+
+            // Start duration tracking
+            if (stage === 'fetching' && !testStartTime) {
+                testStartTime = new Date();
+                document.getElementById('test-start-time').textContent = testStartTime.toLocaleTimeString();
+                durationInterval = setInterval(updateDuration, 1000);
+            }
+        }
+
+        // Update stage timestamp
+        function updateStageTime(elementId, status) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.textContent = status + ' - ' + new Date().toLocaleTimeString();
+            }
+        }
+
+        // Update test duration
+        function updateDuration() {
+            if (!testStartTime) return;
+            const now = new Date();
+            const diff = Math.floor((now - testStartTime) / 1000);
+            document.getElementById('test-duration').textContent = diff + 's';
+        }
+
+        // Add test step to recent steps
+        function addTestStep(step, status) {
+            const stepsDiv = document.getElementById('recent-steps');
+            const stepsList = document.getElementById('steps-list');
+            
+            stepsDiv.classList.remove('hidden');
+            
+            const stepEl = document.createElement('div');
+            stepEl.className = 'text-sm p-2 bg-gray-800 rounded';
+            const statusColor = status === 'success' ? 'text-green-400' : status === 'failed' ? 'text-red-400' : 'text-yellow-400';
+            stepEl.innerHTML = `<span class="${statusColor}">●</span> ${step}`;
+            
+            stepsList.insertBefore(stepEl, stepsList.firstChild);
+            
+            // Keep only last 5 steps
+            while (stepsList.children.length > 5) {
+                stepsList.removeChild(stepsList.lastChild);
+            }
+        }
+
+        // Send chat message
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                addChatMessage('System', '❌ Not connected. Please wait...');
+                return;
+            }
+
+            addChatMessage('You', message);
+            ws.send(JSON.stringify({ message }));
+            input.value = '';
+
+            // Auto-switch to progress tab if running a test
+            if (message.toLowerCase().includes('run test') || message.toLowerCase().includes('execute test')) {
+                setTimeout(() => showTab('progress'), 500);
+                testStartTime = null;
+            }
+        }
+
+        // Add message to chat
+        function addChatMessage(sender, message) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = sender === 'You' ? 'text-right' : 'text-left';
+            
+            const bgColor = sender === 'You' ? 'bg-blue-600' : sender === 'System' ? 'bg-gray-600' : 'bg-gray-700';
+            const timestamp = new Date().toLocaleTimeString();
+            
+            messageEl.innerHTML = `
+                <span class="inline-block px-4 py-2 rounded-lg ${bgColor} max-w-xl">
+                    <strong>${sender}:</strong> ${message}
+                    <div class="text-xs text-gray-300 mt-1">${timestamp}</div>
+                </span>
+            `;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Tab switching
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tab + '-tab').classList.remove('hidden');
+            
+            if (tab === 'metrics') loadMetrics();
+            if (tab === 'reports') loadReports();
+        }
+
+        // Load metrics
+        async function loadMetrics() {
+            try {
+                const response = await fetch('/api/metrics/summary');
+                const data = await response.json();
+                
+                document.getElementById('metric-total').textContent = data.totalTests || 0;
+                document.getElementById('metric-success').textContent = (data.successRate || 0).toFixed(1) + '%';
+                document.getElementById('metric-duration').textContent = (data.avgDuration || 0).toFixed(1) + 's';
+                document.getElementById('metric-today').textContent = data.testsToday || 0;
+                document.getElementById('metric-ai-calls').textContent = data.aiCalls || 0;
+                document.getElementById('metric-cache-hits').textContent = data.cacheHits || 0;
+
+                // Update chart
+                if (chart) chart.destroy();
+                
+                const ctx = document.getElementById('metrics-chart').getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: (data.dailyTrend || []).map(d => d.date),
+                        datasets: [{
+                            label: 'Passed Tests',
+                            data: (data.dailyTrend || []).map(d => d.passed_tests || 0),
+                            borderColor: 'rgb(34, 197, 94)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Failed Tests',
+                            data: (data.dailyTrend || []).map(d => d.failed_tests || 0),
+                            borderColor: 'rgb(239, 68, 68)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#fff' }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#9ca3af' } },
+                            y: { ticks: { color: '#9ca3af' } }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+                addChatMessage('System', '❌ Failed to load metrics');
+            }
+        }
+
+        // Load reports
+        async function loadReports() {
+            try {
+                const response = await fetch('/api/test-runs?limit=20');
+                const data = await response.json();
+                
+                const reportsDiv = document.getElementById('reports-list');
+                reportsDiv.innerHTML = '';
+                
+                if (!data.runs || data.runs.length === 0) {
+                    reportsDiv.innerHTML = '<p class="text-gray-400">No reports available</p>';
+                    return;
+                }
+
+                data.runs.forEach(run => {
+                    const runEl = document.createElement('div');
+                    const statusColor = run.status === 'PASSED' ? 'green' : run.status === 'FAILED' ? 'red' : 'yellow';
+                    const duration = run.duration_seconds ? run.duration_seconds.toFixed(1) + 's' : 'N/A';
+                    
+                    runEl.className = 'bg-gray-900 rounded p-4 flex justify-between items-center hover:bg-gray-850 transition';
+                    runEl.innerHTML = `
+                        <div>
+                            <p class="font-bold">Test Case: ${run.test_case_id}</p>
+                            <p class="text-sm text-gray-400">${run.test_name || 'N/A'}</p>
+                            <p class="text-sm">
+                                Status: <span class="text-${statusColor}-400 font-semibold">${run.status}</span> 
+                                | Duration: ${duration}
+                                | Steps: ${run.passed_steps || 0}/${run.total_steps || 0}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">${new Date(run.start_time).toLocaleString()}</p>
+                        </div>
+                        <button onclick="downloadReport(${run.id})" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition">
+                            📥 Download
+                        </button>
+                    `;
+                    reportsDiv.appendChild(runEl);
+                });
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                document.getElementById('reports-list').innerHTML = '<p class="text-red-400">❌ Failed to load reports</p>';
+            }
+        }
+
+        // Download report
+        function downloadReport(runId) {
+            window.open(`/api/test-runs/${runId}/download`, '_blank');
+            addChatMessage('System', `📥 Downloading report for test run #${runId}...`);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            connectWebSocket();
+            loadMetrics();
+            
+            // Add welcome message
+            addChatMessage('System', '👋 Welcome to Testflow Framework! Type "run test case <ID>" to start.');
+        });
+    </script>
+</body>
+</html>
